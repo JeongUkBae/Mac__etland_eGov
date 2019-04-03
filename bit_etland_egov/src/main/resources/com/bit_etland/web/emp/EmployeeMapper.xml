@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bit_etland.web.emp.EmployeeMapper">
+  <select id="findOneEmployee" resultType="com.bit_etland.web.emp.Employee">
+    SELECT 
+    		Employee_ID employeeID,
+    		MANAGER,
+    		NAME,
+    		BIRTH_DATE birthDate,
+    		PHOTO photo,
+    		NOTES notes
+    FROM EMPLOYEES 
+<!--     WHERE EMPLOYEE_ID LIKE #{employeeID} -->
+<!-- 	 	<if test="password != null"> 
+    	<if test="attr=='password'">
+    		AND PASSWORD LIKE #{password}
+     	</if>  -->
+
+    
+    
+  </select>
+  <insert id="insertCustomer" parameterType="com.bit_etland.web.emp.Employee"
+  			flushCache="true" statementType="PREPARED" timeout="20">
+  		  INSERT INTO CUSTOMERS (CUSTOMER_ID,
+        					   CUSTOMER_NAME, 
+        					   PASSWORD, 
+        					   SSN, 
+        					   PHONE, 
+        					   CITY, 
+        					   ADDRESS, 
+        					   POSTALCODE) 
+        				VALUES (#{customerID},
+        						#{customerName}, 
+        						#{password}, 
+        						#{ssn},
+        						#{phone},
+        						#{city},
+        						#{address},
+        						#{postalcode}
+        						)
+  </insert>
+
+    <update id="updateCustomer" parameterType="com.bit_etland.web.emp.Employee" 
+    		flushCache="true" statementType="PREPARED" timeout="20"> 
+ 		UPDATE CUSTOMERS
+ 			SET PASSWORD = #{password}, 
+ 				PHONE = #{phone},
+ 				CITY = #{city},
+ 				ADDRESS = #{address},
+ 				POSTALCODE = #{postalcode} 
+ 		  WHERE CUSTOMER_ID LIKE #{customerID}
+ 
+ 	</update>
+  
+ 	<delete id="deleteCustomer" parameterType="com.bit_etland.web.emp.Employee" 
+ 			flushCache="true" statementType="PREPARED" timeout="20"> 
+  		DELETE FROM CUSTOMERS WHERE LIKE CUSTOMER_ID LIKE #{customerID}
+                                           AND PASSWORD LIKE #{password}	
+  			
+  			
+ 	</delete>
+</mapper>

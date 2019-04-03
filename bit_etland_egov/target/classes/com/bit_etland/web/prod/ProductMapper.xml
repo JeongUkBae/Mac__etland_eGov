@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bit_etland.web.prod.ProductMapper">
+	
+<resultMap id="result" type="hashmap">
+  <id property="productID" column="PRODUCT_ID" />
+  <result property="productName" column="PRODUCT_NAME"/>
+  <result property="supplierID" column="SUPPLIER_ID"/>
+  <result property="categoryID" column="CATEGORY_ID"/>
+  <result property="unit" column="UNIT"/>
+  <result property="price" column="PRICE"/>
+  <result property="productImage" column="PHOTO"/>
+
+</resultMap>
+  <select id="selectCustomer" resultType="com.bit_etland.web.prod.Product">	
+<!--     SELECT CUSTOMER_ID customerID,
+        	CUSTOMER_NAME customerName, 
+        	PASSWORD, 
+        	SSN, 
+        	PHONE,
+        	PHOTO, 
+        	CITY, 
+        	ADDRESS, 
+        	POSTALCODE
+    FROM CUSTOMERS C
+    WHERE CUSTOMER_ID LIKE #{customerID}
+	 	<if test="password != null"> 
+    		AND PASSWORD LIKE #{password}
+     	</if>  -->
+  </select>
+    <select id="selectProducts" resultMap="result"
+    	parameterType="com.bit_etland.web.cmm.Proxy">
+		SELECT @ROWNUM:=@ROWNUM+1 AS rownum,
+		      P.*
+		FROM PRODUCTS P, (SELECT @ROWNUM:=0) TMP
+		ORDER BY rownum DESC
+		LIMIT #{startRow}, #{pageSize}
+  </select>
+    <select id="countProduct" resultType="int">
+		SELECT count(*)
+		FROM PRODUCTS
+  </select>
+  
+
+  <insert id="insertCustomer" parameterType="com.bit_etland.web.prod.Product"
+  			flushCache="true" statementType="PREPARED" timeout="20">
+  		  INSERT INTO CUSTOMERS (CUSTOMER_ID,
+        					   CUSTOMER_NAME, 
+        					   PASSWORD, 
+        					   SSN, 
+        					   PHONE, 
+        					   CITY, 
+        					   ADDRESS, 
+        					   POSTALCODE) 
+        				VALUES (#{customerID},
+        						#{customerName}, 
+        						#{password}, 
+        						#{ssn},
+        						#{phone},
+        						#{city},
+        						#{address},
+        						#{postalcode}
+        						)
+  </insert>
+
+    <update id="updateCustomer" parameterType="com.bit_etland.web.prod.Product" 
+    		flushCache="true" statementType="PREPARED" timeout="20"> 
+ 		UPDATE CUSTOMERS
+ 			SET PASSWORD = #{password}, 
+ 				PHONE = #{phone},
+ 				CITY = #{city},
+ 				ADDRESS = #{address},
+ 				POSTALCODE = #{postalcode} 
+ 		  WHERE CUSTOMER_ID LIKE #{customerID}
+ 
+ 	</update>
+  
+ 	<delete id="deleteCustomer" parameterType="com.bit_etland.web.prod.Product" 
+ 			flushCache="true" statementType="PREPARED" timeout="20"> 
+  		DELETE FROM CUSTOMERS WHERE LIKE CUSTOMER_ID LIKE #{customerID}
+                                           AND PASSWORD LIKE #{password}	
+  			
+  			
+ 	</delete>
+</mapper>
